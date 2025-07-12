@@ -1,4 +1,5 @@
 import { createMemoryHistory, createRouter } from 'vue-router'
+import Dashboard from '../components/dashboard/Index.vue';
 import Client from '../components/client/List.vue';
 import Add from '../components/client/Add.vue';
 import Edit from '../components/client/Edit.vue';
@@ -7,7 +8,7 @@ import Delete from '../components/client/Delete.vue';
 
 const routes = [
   /*Rotas de clientes */
-  { path: '/', component: Client },
+  { path: '/', component: Dashboard },
   { path: '/client', component: Client },
   { path: '/client/add', component: Add },
   { path: '/client/edit/:id', component: Edit },
