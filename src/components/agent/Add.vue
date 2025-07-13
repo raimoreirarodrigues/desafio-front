@@ -1,24 +1,14 @@
 <template>
-    <loading v-model:active="isLoading"
+  <loading v-model:active="isLoading"
                  :can-cancel="true"
                  :on-cancel="onCancel"
                  :is-full-page="fullPage"/>
   <div class="container mt-3">
     <div class="row">
       <div class="col-lg-12">
-        <div class="accordion mb-5" id="accordionExample">
-  <div class="card">
-    <div class="card-header" id="headingOne">
-      <h2 class="mb-0">
-        <button class="btn btn-link btn-block text-left" @click="enableAccordion()" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-          <i class="fa fa-filter"></i> Filtrar clientes
-        </button>
-      </h2>
-    </div>
-
-    <div id="collapseOne" class="collapse" :class="accordion?'show':''" aria-labelledby="headingOne" data-parent="#accordionExample">
-      <div class="card-body">
-         <form @submit.prevent="filterForm">
+         <h2>Novo representante</h2>
+         <hr>
+        <form @submit.prevent="addItem">
            <div class="row">
             <div class="col-lg-4">
                 <label for="itemDocument">CPF*</label>
@@ -90,100 +80,55 @@
            </div>
            <div class="float-right mt-4">
               <button class="btn btn-danger" type="button" @click="clearForm()"><i class="fa fa-trash"></i> Limpar</button>
-              <button class="btn btn-success ml-3" type="button" @click="searchClient()"><i class="fa fa-search"></i> Pesquisar</button>
+              <button class="btn btn-primary ml-3" type="submit"><i class="fa fa-save"></i> Salvar</button>
            </div>
         </form>
       </div>
     </div>
   </div>
-</div>  
-</div>
-    </div>
-    <h3 v-if="items.length <= 0">Carregando itens</h3>
-    <h3 v-if="items.length > 0">Clientes cadastrados <router-link class="btn btn-primary float-right" to="/client/add"><i class="fa fa-check"></i> Novo cliente</router-link></h3>
-    <div class="row">
-      <div class="col-lg-12">
-          <table class="table mt-2">
-            <thead>
-              <tr>
-                <th scope="col"></th>
-                <th scope="col"></th>
-                <th scope="col">Nome</th>
-                <th scope="col">CPF</th>
-                <th scope="col">Data Nasc.</th>
-                <th scope="col" class="center">Estado</th>
-                <th scope="col" class="center">Cidade</th>
-                <th scope="col" class="center">Sexo</th>
-                
-              </tr>
-            </thead>
-        <tbody>
-          <tr v-if="items.length <= 0">
-              <td colspan="8" class="center">Nenhum item encontrado</td>
-          </tr>
-          <tr v-for="item in items" :key="item.id">
-            <td><button class="btn btn-warning" @click="editItem(item)">Editar</button></td>
-            <td><button class="btn btn-danger" @click="deleteItem(item.id)">Apagar</button></td>
-            <td>{{ item.name }}</td>
-            <td></td>
-            <td></td>
-            <td class="center"></td>
-            <td class="center"></td>
-            <td class="center"></td>           
-          </tr>
-        </tbody>
-      </table>
-      </div>
-    </div>
-  
-  </div>
 </template>
 
 <script>
-import axios from 'axios';
 import {mask} from 'vue-the-mask'
 import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/css/index.css';
 export default {
-  directives: {mask},
-  components: {Loading},
+   directives: {mask},
+   components: {Loading},
   data() {
     return {
-      isLoading: true,
+      isLoading: false,
       fullPage: true,
-      items: [],
-      loading:"Aguarde",
-      client: {document:'',name:'',birthday:'',gender:'',address:'',uf:'',city:''},
-      accordion: false
+      client:{
+        document:'',
+        name:'',
+        birthday:'',
+        gender:'',
+        address:'',
+        uf:'',
+        city:''
+      }
     };
   },
   methods: {
-    onCancel() {},
-    filterForm(){},
     clearForm(){
       this.client = {document:'',name:'',birthday:'',gender:'',address:'',uf:'',city:''}
     },
-    searchClient(){
-
+   addItem() {
+      console.log(this.client)
     },
-    enableAccordion(){
-     if(this.accordion){
-       this.accordion = false;
-     }else{
-      this.accordion = true;
-     }
-    }
+     onCancel() {}
   },
-
+  beforeCreate(){
+     this.isLoading = true;
+  },
   mounted() {
-    axios.get('https://api.sampleapis.com/simpsons/characters').then((response) => {
-      this.items = response.data;
-       this.isLoading = false;
-    });
-  },
+     this.isLoading = false;
+  }
 };
 </script>
 <style>
-.center{text-align: center}
-.float-right{float: right;}
+.float-right{
+  float:right;
+}
 </style>

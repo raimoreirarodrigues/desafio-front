@@ -11,7 +11,7 @@
     <div class="card-header" id="headingOne">
       <h2 class="mb-0">
         <button class="btn btn-link btn-block text-left" @click="enableAccordion()" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-          <i class="fa fa-filter"></i> Filtrar clientes
+          <i class="fa fa-filter"></i> Filtrar representantes
         </button>
       </h2>
     </div>
@@ -22,21 +22,21 @@
            <div class="row">
             <div class="col-lg-4">
                 <label for="itemDocument">CPF*</label>
-                <input class="form-control" v-mask="['###.###.###-##']"  type="text" id="itemDocument" v-model="client.document" placeholder="xxx.xxx.xxx-xx" required />
+                <input class="form-control" v-mask="['###.###.###-##']"  type="text" id="itemDocument" v-model="agent.document" placeholder="xxx.xxx.xxx-xx" required />
             </div>
             <div class="col-lg-8">
               <label for="itemName">Nome*</label>
-              <input class="form-control" type="text" id="itemName" v-model="client.name" placeholder="Ex: José da Silva" required />
+              <input class="form-control" type="text" id="itemName" v-model="agent.name" placeholder="Ex: José da Silva" required />
             </div>
            </div>
            <div class="row mt-3">
              <div class="col-lg-6">
                 <label for="itemBirthday">Data de aniversário*</label>
-                <input class="form-control"  type="date" id="itemBirthday" v-model="client.birthday" required />
+                <input class="form-control"  type="date" id="itemBirthday" v-model="agent.birthday" required />
             </div>
             <div class="col-lg-6">
                 <label for="itemGender">Sexo*</label>
-                <select class="form-control" v-model="client.gender" required>
+                <select class="form-control" v-model="agent.gender" required>
                   <option value="" disabled>Selecione uma opção</option>
                   <option value="m">Masculino</option>
                   <option value="f">Feminino</option>
@@ -46,11 +46,11 @@
            <div class="row mt-3">
              <div class="col-lg-6">
                 <label for="itemAddress">Endereço*</label>
-                <input class="form-control" type="text" id="itemAddress" v-model="client.address" placeholder="Ex: Av. Paulista, nº 90" required />
+                <input class="form-control" type="text" id="itemAddress" v-model="agent.address" placeholder="Ex: Av. Paulista, nº 90" required />
             </div>
             <div class="col-lg-3">
                 <label for="itemGender">Estado*</label>
-                <select class="form-control" v-model="client.uf" required>
+                <select class="form-control" v-model="agent.uf" required>
                     <option value="" disabled>Selecione uma opção</option>
                     <option value="AC">Acre</option>
                     <option value="AL">Alagoas</option>
@@ -83,14 +83,14 @@
             </div>
             <div class="col-lg-3">
                 <label for="itemGender">Cidade*</label>
-                <select class="form-control" v-model="client.city">
+                <select class="form-control" v-model="agent.city">
                   <option value="" disabled>Selecione uma opção</option>
                 </select>
             </div>
            </div>
            <div class="float-right mt-4">
               <button class="btn btn-danger" type="button" @click="clearForm()"><i class="fa fa-trash"></i> Limpar</button>
-              <button class="btn btn-success ml-3" type="button" @click="searchClient()"><i class="fa fa-search"></i> Pesquisar</button>
+              <button class="btn btn-success ml-3" type="button" @click="searchAgent()"><i class="fa fa-search"></i> Pesquisar</button>
            </div>
         </form>
       </div>
@@ -100,7 +100,7 @@
 </div>
     </div>
     <h3 v-if="items.length <= 0">Carregando itens</h3>
-    <h3 v-if="items.length > 0">Clientes cadastrados <router-link class="btn btn-primary float-right" to="/client/add"><i class="fa fa-check"></i> Novo cliente</router-link></h3>
+    <h3 v-if="items.length > 0">Representantes cadastrados <router-link class="btn btn-primary float-right" to="/agent/add"><i class="fa fa-check"></i> Novo representante</router-link></h3>
     <div class="row">
       <div class="col-lg-12">
           <table class="table mt-2">
@@ -153,7 +153,7 @@ export default {
       fullPage: true,
       items: [],
       loading:"Aguarde",
-      client: {document:'',name:'',birthday:'',gender:'',address:'',uf:'',city:''},
+      agent: {document:'',name:'',birthday:'',gender:'',address:'',uf:'',city:''},
       accordion: false
     };
   },
@@ -161,9 +161,9 @@ export default {
     onCancel() {},
     filterForm(){},
     clearForm(){
-      this.client = {document:'',name:'',birthday:'',gender:'',address:'',uf:'',city:''}
+      this.agent = {document:'',name:'',birthday:'',gender:'',address:'',uf:'',city:''}
     },
-    searchClient(){
+    searchAgent(){
 
     },
     enableAccordion(){

@@ -6,13 +6,13 @@
   <div class="container mt-3">
     <div class="row">
       <div class="col-lg-12">
-         <h2>Novo item</h2>
+         <h2>Novo cliente</h2>
          <hr>
         <form @submit.prevent="addItem">
            <div class="row">
             <div class="col-lg-4">
-                <label for="itemDocument">CPF/CNPJ*</label>
-                <input class="form-control" v-mask="['###.###.###-##', '##.###.###/####-##']"  type="text" id="itemDocument" v-model="client.document" placeholder="xxx.xxx.xxx-xx" required />
+                <label for="itemDocument">CPF*</label>
+                <input class="form-control" v-mask="['###.###.###-##']"  type="text" id="itemDocument" v-model="client.document" placeholder="xxx.xxx.xxx-xx" required />
             </div>
             <div class="col-lg-8">
               <label for="itemName">Nome*</label>
@@ -78,8 +78,10 @@
                 </select>
             </div>
            </div>
-          <router-link class="btn btn-danger mt-3" to="/client"><i class="fa fa-arrow-left"></i>Voltar para listagem</router-link>
-          <button class="btn btn-primary mt-3 ml-3" type="submit"><i class="fa fa-save"></i> item</button>
+           <div class="float-right mt-4">
+              <button class="btn btn-danger" type="button" @click="clearForm()"><i class="fa fa-trash"></i> Limpar</button>
+              <button class="btn btn-primary ml-3" type="submit"><i class="fa fa-save"></i> Salvar</button>
+           </div>
         </form>
       </div>
     </div>
@@ -109,6 +111,9 @@ export default {
     };
   },
   methods: {
+    clearForm(){
+      this.client = {document:'',name:'',birthday:'',gender:'',address:'',uf:'',city:''}
+    },
    addItem() {
       console.log(this.client)
     },
@@ -122,3 +127,8 @@ export default {
   }
 };
 </script>
+<style>
+.float-right{
+  float:right;
+}
+</style>

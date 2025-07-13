@@ -1,7 +1,7 @@
 <template>
  <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
-    <router-link to="/" class="navbar-brand">Desafio</router-link>
+    <router-link to="/" class="navbar-brand"><img src="../assets/img/logo.png" width="60px"> </router-link>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -14,7 +14,7 @@
           <router-link to="/client" class="nav-link" aria-current="page">Clientes</router-link>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Representantes</a>
+           <router-link to="/agent" class="nav-link" aria-current="page">Representantes</router-link>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Cidades</a>
