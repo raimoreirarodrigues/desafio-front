@@ -123,7 +123,7 @@
                   name: 'client_edit',
                   params: { id: client.id }
           }">Editar</router-link></td>
-            <td><button class="btn btn-danger" @click="deleteItem(client.id)">Apagar</button></td>
+            <td><button class="btn btn-danger" @click="deleteClient(client.id)">Apagar</button></td>
             <td>{{ client.name }}</td>
             <td>{{ client.document }}</td>
             <td>{{ formatDate(client.birthday) }}</td>
@@ -217,6 +217,46 @@ export default {
     },
     formatDate(date) {
         return moment(date).format('DD/MM/YYYY');
+    },
+
+    deleteClient(id){
+       this.$confirm(
+        {
+          message: 'Deseja apagar o cliente?',
+          button: {
+            no: 'Não',
+            yes: 'Sim'
+          },
+         
+          callback: confirm => {
+            if (confirm) {
+               const fetch = async (url) => {
+                try {
+                    this.isLoading = true;
+                    await axios.delete(url,this.client);
+                    this.$notify({
+                          title: "Sucesso",
+                          text: "Cliente apagado com sucesso!",
+                          type:'success'
+                      });
+                        this.isLoading = false;
+                        this.loadListClients();
+                  }catch (error) {
+                      this.isLoading = false;
+                      if(error){
+                        this.$notify({
+                            title: "Falha",
+                            text: "Não foi possível apagar o cliente. Por favor, tente novamente mais tarde.",
+                            type:'error'
+                          });
+                      }
+                  }
+               }
+              fetch('http://localhost:10090/api/v1/client/'+id);
+                    }
+                  }
+                }
+              )
     },
 
     loadListClients(filter = []){

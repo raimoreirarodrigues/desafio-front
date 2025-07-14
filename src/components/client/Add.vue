@@ -123,6 +123,7 @@ export default {
    addItem() {
       const fetch = async (url) => {
         try {
+          this.isLoading = true;
           await axios.post(url,this.client);
            this.clearForm();
            this.$notify({
@@ -131,6 +132,7 @@ export default {
                 type:'success'
             });
         } catch (error) {
+          this.isLoading = false;
           if (error.response.status === 422) {
              this.$notify({
                 title: "Falha",

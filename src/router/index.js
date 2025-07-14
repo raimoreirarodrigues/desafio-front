@@ -3,7 +3,6 @@ import Dashboard from '../components/dashboard/Index.vue';
 import Client from '../components/client/List.vue';
 import AddClient from '../components/client/Add.vue';
 import EditClient from '../components/client/Edit.vue';
-import DeleteClient from '../components/client/Delete.vue';
 
 import Agent from '../components/agent/List.vue';
 import AddAgent from '../components/agent/Add.vue';
@@ -20,7 +19,6 @@ const routes = [
   { path: '/client', component: Client },
   { path: '/client/add', component: AddClient },
   { path: '/client/:id', component: EditClient, name: "client_edit" },
-  { path: '/client/delete/:id', component: DeleteClient },
 
   /*Rotas de representantes */
  

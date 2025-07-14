@@ -2,6 +2,7 @@
 <template>
   <div>
     <notifications position="top center" />
+    <vue3-confirm-dialog></vue3-confirm-dialog>
     <Menu></Menu>
     <router-view />
   </div>

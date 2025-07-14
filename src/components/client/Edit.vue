@@ -104,6 +104,7 @@ export default {
        isLoading: false,
       fullPage: true,
       client:{
+        id:'',
         document:'',
         name:'',
         birthday:'',
@@ -116,8 +117,38 @@ export default {
     };
   },
   methods: {
+    
     updateItem() {
-      // Implement update functionality
+       const fetch = async (url) => {
+        try {
+          this.isLoading = true;
+          await axios.put(url,this.client);
+           this.$notify({
+                title: "Sucesso",
+                text: "Cliente atualizado com sucesso!",
+                type:'success'
+            });
+               this.isLoading = false;
+        }catch (error) {
+          this.isLoading = false;
+          if(error){
+             if (error.response.status === 422) {
+             this.$notify({
+                title: "Falha",
+                text: "Verifique os dados informados ou se o CPF já está cadastrado!",
+                type:'error'
+              });
+            }else{
+              this.$notify({
+                title: "Falha",
+                text: "Não foi possível atualizar o cliente. Por favor, tente novamente mais tarde.",
+                type:'error'
+              });
+            }
+          }
+        }
+      }
+      fetch('http://localhost:10090/api/v1/client/'+this.client.id);
     },
     onChange(event) {
        this.isLoading = true;
@@ -138,7 +169,8 @@ export default {
   },
     mounted() {
       this.url_api = process.env.VUE_APP_URL_API
-      const id = this.$route.params.id;
+       const id = this.$route.params.id;
+       this.client.id = id;
        axios.get(this.url_api+'/client/'+id).then((response) => {
         this.cities = response.data.cities;
         this.client = response.data.client;
