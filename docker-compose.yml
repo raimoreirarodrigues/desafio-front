@@ -1,0 +1,9 @@
+services:
+  frontend:
+    build: .
+    ports:
+      - "8080:80" # Map host port 8080 to container port 80
+    volumes:
+      - ./src:/app/src # Mount source code for live-reloading during development
+      - ./public:/app/public
+      - ./node_modules:/app/node_modules # Mount node_modules to avoid re-installing on every build
