@@ -40,7 +40,7 @@
             </div>
             <div class="col-lg-3">
                 <label for="itemGender">Estado*</label>
-                <select class="form-control" v-model="client.uf" required>
+                <select class="form-control" @change="onChange($event)" v-model="client.uf" required>
                     <option value="" disabled>Selecione uma opção</option>
                     <option value="AC">Acre</option>
                     <option value="AL">Alagoas</option>
@@ -117,7 +117,10 @@ export default {
    addItem() {
       console.log(this.client)
     },
-     onCancel() {}
+    onChange(event) {
+       console.log(event.target.value)
+     },
+   onCancel() {}
   },
   beforeCreate(){
      this.isLoading = true;

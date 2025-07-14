@@ -1,6 +1,7 @@
 
 <template>
   <div>
+    <notifications position="top center" />
     <Menu></Menu>
     <router-view />
   </div>

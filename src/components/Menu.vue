@@ -16,9 +16,6 @@
         <li class="nav-item">
            <router-link to="/agent" class="nav-link" aria-current="page">Representantes</router-link>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Cidades</a>
-        </li>
       </ul>
     </div>
   </div>

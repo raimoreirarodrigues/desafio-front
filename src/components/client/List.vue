@@ -21,21 +21,15 @@
          <form @submit.prevent="filterForm">
            <div class="row">
             <div class="col-lg-4">
-                <label for="itemDocument">CPF*</label>
+                <label for="itemDocument">CPF</label>
                 <input class="form-control" v-mask="['###.###.###-##']"  type="text" id="itemDocument" v-model="client.document" placeholder="xxx.xxx.xxx-xx" required />
             </div>
-            <div class="col-lg-8">
-              <label for="itemName">Nome*</label>
+            <div class="col-lg-5">
+              <label for="itemName">Nome</label>
               <input class="form-control" type="text" id="itemName" v-model="client.name" placeholder="Ex: José da Silva" required />
             </div>
-           </div>
-           <div class="row mt-3">
-             <div class="col-lg-6">
-                <label for="itemBirthday">Data de aniversário*</label>
-                <input class="form-control"  type="date" id="itemBirthday" v-model="client.birthday" required />
-            </div>
-            <div class="col-lg-6">
-                <label for="itemGender">Sexo*</label>
+             <div class="col-lg-3">
+                <label for="itemGender">Sexo</label>
                 <select class="form-control" v-model="client.gender" required>
                   <option value="" disabled>Selecione uma opção</option>
                   <option value="m">Masculino</option>
@@ -45,12 +39,12 @@
            </div>
            <div class="row mt-3">
              <div class="col-lg-6">
-                <label for="itemAddress">Endereço*</label>
+                <label for="itemAddress">Endereço</label>
                 <input class="form-control" type="text" id="itemAddress" v-model="client.address" placeholder="Ex: Av. Paulista, nº 90" required />
             </div>
             <div class="col-lg-3">
-                <label for="itemGender">Estado*</label>
-                <select class="form-control" v-model="client.uf" required>
+                <label for="itemGender">Estado</label>
+                <select class="form-control" @change="onChange($event)" v-model="client.uf" required>
                     <option value="" disabled>Selecione uma opção</option>
                     <option value="AC">Acre</option>
                     <option value="AL">Alagoas</option>
@@ -82,9 +76,12 @@
                 </select>
             </div>
             <div class="col-lg-3">
-                <label for="itemGender">Cidade*</label>
+                <label for="itemGender">Cidade</label>
                 <select class="form-control" v-model="client.city">
-                  <option value="" disabled>Selecione uma opção</option>
+                   <option value="" disabled>Selecione uma opção</option>
+                   <option v-for="city in cities" :key="city.id" :value="city.id">
+                      {{ city.name }}
+                    </option>
                 </select>
             </div>
            </div>
@@ -99,8 +96,8 @@
 </div>  
 </div>
     </div>
-    <h3 v-if="items.length <= 0">Carregando itens</h3>
-    <h3 v-if="items.length > 0">Clientes cadastrados <router-link class="btn btn-primary float-right" to="/client/add"><i class="fa fa-check"></i> Novo cliente</router-link></h3>
+    <h3 v-if="clients.length <= 0">Carregando itens</h3>
+    <h3 v-if="clients.length > 0">Clientes cadastrados <router-link class="btn btn-primary float-right" to="/client/add"><i class="fa fa-check"></i> Novo cliente</router-link></h3>
     <div class="row">
       <div class="col-lg-12">
           <table class="table mt-2">
@@ -118,18 +115,18 @@
               </tr>
             </thead>
         <tbody>
-          <tr v-if="items.length <= 0">
+          <tr v-if="clients.length <= 0">
               <td colspan="8" class="center">Nenhum item encontrado</td>
           </tr>
-          <tr v-for="item in items" :key="item.id">
-            <td><button class="btn btn-warning" @click="editItem(item)">Editar</button></td>
-            <td><button class="btn btn-danger" @click="deleteItem(item.id)">Apagar</button></td>
-            <td>{{ item.name }}</td>
-            <td></td>
-            <td></td>
-            <td class="center"></td>
-            <td class="center"></td>
-            <td class="center"></td>           
+          <tr v-for="client in clients" :key="client.id">
+            <td><button class="btn btn-warning" @click="editItem(client)">Editar</button></td>
+            <td><button class="btn btn-danger" @click="deleteItem(client.id)">Apagar</button></td>
+            <td>{{ client.name }}</td>
+            <td>{{ client.document }}</td>
+            <td>{{ client.birthday }}</td>
+            <td class="center">{{ client.uf }}</td>
+            <td class="center">{{ client.city }}</td>
+            <td class="center">{{ client.gender }}</td>           
           </tr>
         </tbody>
       </table>
@@ -144,6 +141,7 @@ import axios from 'axios';
 import {mask} from 'vue-the-mask'
 import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/css/index.css';
+
 export default {
   directives: {mask},
   components: {Loading},
@@ -151,35 +149,80 @@ export default {
     return {
       isLoading: true,
       fullPage: true,
-      items: [],
+      clients: [],
       loading:"Aguarde",
       client: {document:'',name:'',birthday:'',gender:'',address:'',uf:'',city:''},
-      accordion: false
+      cities:[],
+      accordion: false,
+      url_api:''
     };
   },
   methods: {
     onCancel() {},
     filterForm(){},
     clearForm(){
+      this.accordion = true;
       this.client = {document:'',name:'',birthday:'',gender:'',address:'',uf:'',city:''}
+      this.loadListClients();
     },
     searchClient(){
+      let filter = [];
+      if(this.client.document != ''){
+        filter['document'] = this.client.document
+      }
+      if(this.client.name != ''){
+        filter['name'] = this.client.name
+      }
 
+      if(this.client.gender != ''){
+        filter['gender'] = this.client.gender
+      }
+
+      if(this.client.uf != ''){
+        filter['uf'] = this.client.uf
+      }
+
+      if(this.client.address != ''){
+        filter['address'] = this.client.address
+      }
+
+      if(this.client.city != ''){
+        filter['city'] = this.client.city
+      }
+       this.accordion = true;
+      this.loadListClients(filter);
     },
+     onChange(event) {
+       this.isLoading = true;
+       let uf = event.target.value;
+       axios.get(this.url_api+'/city/'+uf).then((response) => {
+          this.cities = response.data.cities;
+           this.isLoading = false;
+        }).catch(function (error) {
+           this.isLoading = false;
+          console.error(error);
+        });
+     },
     enableAccordion(){
      if(this.accordion){
        this.accordion = false;
      }else{
       this.accordion = true;
      }
+    },
+
+    loadListClients(filter = []){
+       let body = Object.assign({}, filter);
+       axios.get(this.url_api+'/client',{params:body}).then((response) => {
+       this.clients = response.data.data;
+       this.isLoading = false;
+    });
     }
   },
 
   mounted() {
-    axios.get('https://api.sampleapis.com/simpsons/characters').then((response) => {
-      this.items = response.data;
-       this.isLoading = false;
-    });
+    this.url_api = process.env.VUE_APP_URL_API
+    this.loadListClients();
   },
 };
 </script>

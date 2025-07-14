@@ -28,8 +28,8 @@
                 <label for="itemGender">Sexo*</label>
                 <select class="form-control" v-model="client.gender" required>
                   <option value="" disabled>Selecione uma opção</option>
-                  <option value="m">Masculino</option>
-                  <option value="f">Feminino</option>
+                  <option value="M">Masculino</option>
+                  <option value="F">Feminino</option>
                 </select>
             </div>
            </div>
@@ -40,7 +40,7 @@
             </div>
             <div class="col-lg-3">
                 <label for="itemGender">Estado*</label>
-                <select class="form-control" v-model="client.uf" required>
+                <select class="form-control" @change="onChange($event)" v-model="client.uf" required>
                     <option value="" disabled>Selecione uma opção</option>
                     <option value="AC">Acre</option>
                     <option value="AL">Alagoas</option>
@@ -73,8 +73,11 @@
             </div>
             <div class="col-lg-3">
                 <label for="itemGender">Cidade*</label>
-                <select class="form-control" v-model="client.city">
-                  <option value="" disabled>Selecione uma opção</option>
+                <select  class="form-control" v-model="client.city">
+                   <option value="" disabled>Selecione uma opção</option>
+                   <option v-for="city in cities" :key="city.id" :value="city.id">
+                      {{ city.name }}
+                    </option>
                 </select>
             </div>
            </div>
@@ -89,6 +92,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import {mask} from 'vue-the-mask'
 import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/css/index.css';
@@ -106,23 +110,58 @@ export default {
         gender:'',
         address:'',
         uf:'',
-        city:''
-      }
+      },
+       cities:[],
+       url_api:''
     };
   },
   methods: {
     clearForm(){
       this.client = {document:'',name:'',birthday:'',gender:'',address:'',uf:'',city:''}
+      this.cities = []
     },
    addItem() {
-      console.log(this.client)
+      const fetch = async (url) => {
+        try {
+          await axios.post(url,this.client);
+           this.clearForm();
+           this.$notify({
+                title: "Sucesso",
+                text: "Cliente cadastrado com sucesso!",
+                type:'success'
+            });
+        } catch (error) {
+          if (error.response.status === 422) {
+             this.$notify({
+                title: "Falha",
+                text: "Verifique os dados informados ou se o CPF já está cadastrado!",
+                type:'error'
+            });
+          }
+        }
+      }
+      fetch('http://localhost:10090/api/v1/client');
+ 
     },
-     onCancel() {}
+     onChange(event) {
+       this.isLoading = true;
+       let uf = event.target.value;
+       axios.get('http://localhost:10090/api/v1/city/'+uf).then((response) => {
+          this.cities = response.data.cities;
+           this.isLoading = false;
+           
+        }).catch(function (error) {
+           this.isLoading = false;
+          console.error(error);
+        });
+     },
+   onCancel() {}
   },
   beforeCreate(){
      this.isLoading = true;
   },
   mounted() {
+     this.url_api = process.env.VUE_APP_URL_API
      this.isLoading = false;
   }
 };
