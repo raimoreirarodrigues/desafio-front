@@ -75,7 +75,7 @@
 </div>  
 </div>
     </div>
-    <h3>Cidades cadastradas</h3>
+    <h5>Cidades associadas a <strong>{{ this.agent.name }}</strong> </h5>
     <div class="row">
       <div class="col-lg-12">
           <table class="table mt-2">
@@ -119,6 +119,7 @@ export default {
       isLoading: true,
       fullPage: true,
       cities: [],
+      agent: {document:'',name:'',birthday:'',gender:'',address:''},
       cities_uf: [],
       loading:"Aguarde",
       city: {uf:'',id:''},
@@ -144,11 +145,19 @@ export default {
         }catch (error) {
           this.isLoading = false;
           if(error){
-              this.$notify({
+              if(error.response.status === 422) {
+                this.$notify({
+                    title: "Falha",
+                    text: "A cidade já está associada ao representante",
+                    type:'error'
+                  });
+            }else{
+               this.$notify({
                 title: "Falha",
                 text: "Não foi possível associar a cidade ao representante. Por favor, tente novamente mais tarde.",
                 type:'error'
               });
+             }
           }
         }
       }
@@ -183,7 +192,7 @@ export default {
     deleteCity(id){
        this.$confirm(
         {
-          message: 'Deseja apagar o representante?',
+          message: 'Deseja remover a cidade do representante?',
           button: {
             no: 'Não',
             yes: 'Sim'
@@ -194,10 +203,10 @@ export default {
                const fetch = async (url) => {
                 try {
                     this.isLoading = true;
-                    await axios.delete(url,this.agent);
+                    await axios.delete(url);
                     this.$notify({
                           title: "Sucesso",
-                          text: "Representante apagado com sucesso!",
+                          text: "Cidade removida com sucesso!",
                           type:'success'
                       });
                         this.isLoading = false;
@@ -213,7 +222,7 @@ export default {
                       }
                   }
                }
-              fetch(this.url_api+'/agent/'+id);
+              fetch(this.url_api+'/agent/'+id+'/cities');
                     }
                   }
                 }
@@ -222,6 +231,7 @@ export default {
 
     loadListcities(){
        axios.get(this.url_api+'/agent/'+this.id_agent+'/cities').then((response) => {
+       this.agent = response.data.agent;
        this.cities = response.data.cities;
        this.isLoading = false;
     });
