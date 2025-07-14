@@ -74,6 +74,10 @@
               <td colspan="6" class="center">Nenhum item encontrado</td>
           </tr>
           <tr v-for="agent in representatives" :key="agent.id">
+             <td><router-link class="btn btn-primary" :to="{
+                  name: 'agent_cities',
+                  params: { id: agent.id }
+          }">Cidades</router-link></td>
             <td><router-link class="btn btn-warning" :to="{
                   name: 'agent_edit',
                   params: { id: agent.id }

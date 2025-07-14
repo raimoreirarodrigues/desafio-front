@@ -73,7 +73,9 @@ export default {
     };
   },
   methods: {
-    
+     clearForm(){
+      this.agent = {document:'',name:'',birthday:'',gender:'',address:''}
+    },
     updateItem() {
        const fetch = async (url) => {
         try {
