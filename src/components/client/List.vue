@@ -119,11 +119,14 @@
               <td colspan="8" class="center">Nenhum item encontrado</td>
           </tr>
           <tr v-for="client in clients" :key="client.id">
-            <td><button class="btn btn-warning" @click="editItem(client)">Editar</button></td>
+            <td><router-link class="btn btn-warning" :to="{
+                  name: 'client_edit',
+                  params: { id: client.id }
+          }">Editar</router-link></td>
             <td><button class="btn btn-danger" @click="deleteItem(client.id)">Apagar</button></td>
             <td>{{ client.name }}</td>
             <td>{{ client.document }}</td>
-            <td>{{ client.birthday }}</td>
+            <td>{{ formatDate(client.birthday) }}</td>
             <td class="center">{{ client.uf }}</td>
             <td class="center">{{ client.city }}</td>
             <td class="center">{{ client.gender }}</td>           
@@ -140,6 +143,8 @@
 import axios from 'axios';
 import {mask} from 'vue-the-mask'
 import Loading from 'vue-loading-overlay';
+import moment from 'moment';
+
 import 'vue-loading-overlay/dist/css/index.css';
 
 export default {
@@ -209,6 +214,9 @@ export default {
      }else{
       this.accordion = true;
      }
+    },
+    formatDate(date) {
+        return moment(date).format('DD/MM/YYYY');
     },
 
     loadListClients(filter = []){

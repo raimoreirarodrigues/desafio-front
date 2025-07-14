@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>Edit Item</h2>
+    <h2>Edita representante</h2>
     <form @submit.prevent="updateItem">
       <label for="editedItemName">Item Name:</label>
       <input type="text" id="editedItemName" v-model="editedItemName" required />

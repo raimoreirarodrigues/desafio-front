@@ -19,7 +19,7 @@ const routes = [
   /*Rotas de clientes */
   { path: '/client', component: Client },
   { path: '/client/add', component: AddClient },
-  { path: '/client/edit/:id', component: EditClient },
+  { path: '/client/:id', component: EditClient, name: "client_edit" },
   { path: '/client/delete/:id', component: DeleteClient },
 
   /*Rotas de representantes */
