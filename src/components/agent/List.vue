@@ -21,21 +21,15 @@
          <form @submit.prevent="filterForm">
            <div class="row">
             <div class="col-lg-4">
-                <label for="itemDocument">CPF*</label>
+                <label for="itemDocument">CPF</label>
                 <input class="form-control" v-mask="['###.###.###-##']"  type="text" id="itemDocument" v-model="agent.document" placeholder="xxx.xxx.xxx-xx" required />
             </div>
-            <div class="col-lg-8">
-              <label for="itemName">Nome*</label>
+            <div class="col-lg-5">
+              <label for="itemName">Nome</label>
               <input class="form-control" type="text" id="itemName" v-model="agent.name" placeholder="Ex: José da Silva" required />
             </div>
-           </div>
-           <div class="row mt-3">
-             <div class="col-lg-6">
-                <label for="itemBirthday">Data de aniversário*</label>
-                <input class="form-control"  type="date" id="itemBirthday" v-model="agent.birthday" required />
-            </div>
-            <div class="col-lg-6">
-                <label for="itemGender">Sexo*</label>
+             <div class="col-lg-3">
+                <label for="itemGender">Sexo</label>
                 <select class="form-control" v-model="agent.gender" required>
                   <option value="" disabled>Selecione uma opção</option>
                   <option value="m">Masculino</option>
@@ -44,48 +38,9 @@
             </div>
            </div>
            <div class="row mt-3">
-             <div class="col-lg-6">
-                <label for="itemAddress">Endereço*</label>
+             <div class="col-lg-12">
+                <label for="itemAddress">Endereço</label>
                 <input class="form-control" type="text" id="itemAddress" v-model="agent.address" placeholder="Ex: Av. Paulista, nº 90" required />
-            </div>
-            <div class="col-lg-3">
-                <label for="itemGender">Estado*</label>
-                <select class="form-control" v-model="agent.uf" required>
-                    <option value="" disabled>Selecione uma opção</option>
-                    <option value="AC">Acre</option>
-                    <option value="AL">Alagoas</option>
-                    <option value="AP">Amapá</option>
-                    <option value="AM">Amazonas</option>
-                    <option value="BA">Bahia</option>
-                    <option value="CE">Ceará</option>
-                    <option value="DF">Distrito Federal</option>
-                    <option value="ES">Espírito Santo</option>
-                    <option value="GO">Goiás</option>
-                    <option value="MA">Maranhão</option>
-                    <option value="MT">Mato Grosso</option>
-                    <option value="MS">Mato Grosso do Sul</option>
-                    <option value="MG">Minas Gerais</option>
-                    <option value="PA">Pará</option>
-                    <option value="PB">Paraíba</option>
-                    <option value="PR">Paraná</option>
-                    <option value="PE">Pernambuco</option>
-                    <option value="PI">Piauí</option>
-                    <option value="RJ">Rio de Janeiro</option>
-                    <option value="RN">Rio Grande do Norte</option>
-                    <option value="RS">Rio Grande do Sul</option>
-                    <option value="RO">Rondônia</option>
-                    <option value="RR">Roraima</option>
-                    <option value="SC">Santa Catarina</option>
-                    <option value="SP">São Paulo</option>
-                    <option value="SE">Sergipe</option>
-                    <option value="TO">Tocantins</option>
-                </select>
-            </div>
-            <div class="col-lg-3">
-                <label for="itemGender">Cidade*</label>
-                <select class="form-control" v-model="agent.city">
-                  <option value="" disabled>Selecione uma opção</option>
-                </select>
             </div>
            </div>
            <div class="float-right mt-4">
@@ -99,8 +54,7 @@
 </div>  
 </div>
     </div>
-    <h3 v-if="items.length <= 0">Carregando itens</h3>
-    <h3 v-if="items.length > 0">Representantes cadastrados <router-link class="btn btn-primary float-right" to="/agent/add"><i class="fa fa-check"></i> Novo representante</router-link></h3>
+    <h3>Representantes cadastrados <router-link class="btn btn-primary float-right" to="/agent/add"><i class="fa fa-check"></i> Novo representante</router-link></h3>
     <div class="row">
       <div class="col-lg-12">
           <table class="table mt-2">
@@ -111,25 +65,24 @@
                 <th scope="col">Nome</th>
                 <th scope="col">CPF</th>
                 <th scope="col">Data Nasc.</th>
-                <th scope="col" class="center">Estado</th>
-                <th scope="col" class="center">Cidade</th>
                 <th scope="col" class="center">Sexo</th>
                 
               </tr>
             </thead>
         <tbody>
-          <tr v-if="items.length <= 0">
-              <td colspan="8" class="center">Nenhum item encontrado</td>
+          <tr v-if="representatives.length <= 0">
+              <td colspan="6" class="center">Nenhum item encontrado</td>
           </tr>
-          <tr v-for="item in items" :key="item.id">
-            <td><button class="btn btn-warning" @click="editItem(item)">Editar</button></td>
-            <td><button class="btn btn-danger" @click="deleteItem(item.id)">Apagar</button></td>
-            <td>{{ item.name }}</td>
-            <td></td>
-            <td></td>
-            <td class="center"></td>
-            <td class="center"></td>
-            <td class="center"></td>           
+          <tr v-for="agent in representatives" :key="agent.id">
+            <td><router-link class="btn btn-warning" :to="{
+                  name: 'agent_edit',
+                  params: { id: agent.id }
+          }">Editar</router-link></td>
+            <td><button class="btn btn-danger" @click="deleteAgent(agent.id)">Apagar</button></td>
+            <td>{{ agent.name }}</td>
+            <td>{{ agent.document }}</td>
+            <td>{{ formatDate(agent.birthday) }}</td>
+            <td class="center">{{ agent.gender }}</td>           
           </tr>
         </tbody>
       </table>
@@ -143,7 +96,10 @@
 import axios from 'axios';
 import {mask} from 'vue-the-mask'
 import Loading from 'vue-loading-overlay';
+import moment from 'moment';
+
 import 'vue-loading-overlay/dist/css/index.css';
+
 export default {
   directives: {mask},
   components: {Loading},
@@ -151,35 +107,110 @@ export default {
     return {
       isLoading: true,
       fullPage: true,
-      items: [],
+      representatives: [],
       loading:"Aguarde",
-      agent: {document:'',name:'',birthday:'',gender:'',address:'',uf:'',city:''},
-      accordion: false
+      agent: {document:'',name:'',birthday:'',gender:'',address:''},
+      cities:[],
+      accordion: false,
+      url_api:''
     };
   },
   methods: {
     onCancel() {},
     filterForm(){},
     clearForm(){
-      this.agent = {document:'',name:'',birthday:'',gender:'',address:'',uf:'',city:''}
+      this.accordion = true;
+      this.agent = {document:'',name:'',birthday:'',gender:'',address:''}
+      this.loadListRepresentatives();
     },
     searchAgent(){
+      let filter = [];
+      if(this.agent.document != ''){
+        filter['document'] = this.agent.document
+      }
+      if(this.agent.name != ''){
+        filter['name'] = this.agent.name
+      }
 
+      if(this.agent.gender != ''){
+        filter['gender'] = this.agent.gender
+      }
+
+      if(this.agent.uf != ''){
+        filter['uf'] = this.agent.uf
+      }
+
+      if(this.agent.address != ''){
+        filter['address'] = this.agent.address
+      }
+
+       this.accordion = true;
+      this.loadListRepresentatives(filter);
     },
+     
     enableAccordion(){
      if(this.accordion){
        this.accordion = false;
      }else{
       this.accordion = true;
      }
+    },
+    formatDate(date) {
+        return moment(date).format('DD/MM/YYYY');
+    },
+
+    deleteAgent(id){
+       this.$confirm(
+        {
+          message: 'Deseja apagar o representante?',
+          button: {
+            no: 'Não',
+            yes: 'Sim'
+          },
+         
+          callback: confirm => {
+            if (confirm) {
+               const fetch = async (url) => {
+                try {
+                    this.isLoading = true;
+                    await axios.delete(url,this.agent);
+                    this.$notify({
+                          title: "Sucesso",
+                          text: "Representante apagado com sucesso!",
+                          type:'success'
+                      });
+                        this.isLoading = false;
+                        this.loadListRepresentatives();
+                  }catch (error) {
+                      this.isLoading = false;
+                      if(error){
+                        this.$notify({
+                            title: "Falha",
+                            text: "Não foi possível apagar o representante. Por favor, tente novamente mais tarde.",
+                            type:'error'
+                          });
+                      }
+                  }
+               }
+              fetch(this.url_api+'/agent/'+id);
+                    }
+                  }
+                }
+              )
+    },
+
+    loadListRepresentatives(filter = []){
+       let body = Object.assign({}, filter);
+       axios.get(this.url_api+'/agent',{params:body}).then((response) => {
+       this.representatives = response.data.data;
+       this.isLoading = false;
+    });
     }
   },
 
   mounted() {
-    axios.get('https://api.sampleapis.com/simpsons/characters').then((response) => {
-      this.items = response.data;
-       this.isLoading = false;
-    });
+    this.url_api = process.env.VUE_APP_URL_API
+    this.loadListRepresentatives();
   },
 };
 </script>

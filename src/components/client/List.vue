@@ -96,8 +96,7 @@
 </div>  
 </div>
     </div>
-    <h3 v-if="clients.length <= 0">Carregando itens</h3>
-    <h3 v-if="clients.length > 0">Clientes cadastrados <router-link class="btn btn-primary float-right" to="/client/add"><i class="fa fa-check"></i> Novo cliente</router-link></h3>
+    <h3>Clientes cadastrados <router-link class="btn btn-primary float-right" to="/client/add"><i class="fa fa-check"></i> Novo cliente</router-link></h3>
     <div class="row">
       <div class="col-lg-12">
           <table class="table mt-2">

@@ -7,9 +7,6 @@ import EditClient from '../components/client/Edit.vue';
 import Agent from '../components/agent/List.vue';
 import AddAgent from '../components/agent/Add.vue';
 import EditAgent from '../components/agent/Edit.vue';
-import DeleteAgent from '../components/agent/Delete.vue';
-
-
 
 const routes = [
  
@@ -24,8 +21,7 @@ const routes = [
  
   { path: '/agent', component: Agent },
   { path: '/agent/add', component: AddAgent },
-  { path: '/agent/edit/:id', component: EditAgent },
-  { path: '/agent/delete/:id', component: DeleteAgent },
+  { path: '/agent/:id', component: EditAgent, name: "agent_edit"  }
 
 ];
 
